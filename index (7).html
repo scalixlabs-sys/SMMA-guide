@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdOps — Meta Ads Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c0e;
+    --bg2: #131317;
+    --bg3: #1a1a20;
+    --bg4: #22222a;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0efe8;
+    --text2: #9998a0;
+    --text3: #5a5960;
+    --accent: #e8d5a0;
+    --accent2: #c4a96a;
+    --green: #7ec99a;
+    --green-bg: rgba(126,201,154,0.1);
+    --amber: #e8b86d;
+    --amber-bg: rgba(232,184,109,0.1);
+    --red: #e87d7d;
+    --red-bg: rgba(232,125,125,0.1);
+    --blue: #7db5e8;
+    --blue-bg: rgba(125,181,232,0.1);
+    --purple: #b07de8;
+    --purple-bg: rgba(176,125,232,0.1);
+    --font-display: 'Instrument Serif', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Layout ── */
+  .shell {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--font-mono);
+  }
+
+  .niche-selector {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .niche-label {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+
+  .niche-select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 12px;
+    padding: 7px 10px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a5960'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    outline: none;
+  }
+
+  .niche-select:focus { border-color: var(--accent2); }
+
+  .nav {
+    flex: 1;
+    padding: 12px 0;
+    overflow-y: auto;
+  }
+
+  .nav-section {
+    padding: 6px 16px 2px;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-top: 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 1px 8px;
+    transition: background 0.15s, color 0.15s;
+    border: none;
+    background: none;
+    width: calc(100% - 16px);
+    text-align: left;
+  }
+
+  .nav-item:hover { background: var(--bg3); color: var(--text); }
+  .nav-item.active { background: var(--bg4); color: var(--accent); }
+
+  .nav-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.6; }
+  .nav-item.active svg { opacity: 1; }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--font-mono);
+    line-height: 1.5;
+  }
+
+  /* ── Main content ── */
+  .main {
+    margin-left: 220px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page {
+    display: none;
+    max-width: 820px;
+    padding: 40px 40px 80px;
+  }
+
+  .page.active { display: block; }
+
+  /* ── Page header ── */
+  .page-header {
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .page-title em { font-style: italic; color: var(--accent); }
+
+  .page-desc {
+    font-size: 14px;
+    color: var(--text2);
+    max-width: 580px;
+    line-height: 1.65;
+  }
+
+  /* ── Section titles ── */
+  h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 32px 0 12px;
+  }
+
+  h3 {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin: 28px 0 10px;
+  }
+
+  p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin: 10px 0;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  .metric-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+
+  .metric-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+
+  .metric-val {
+    font-size: 26px;
+    font-weight: 300;
+    font-family: var(--font-mono);
+    color: var(--text);
+  }
+
+  .metric-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 3px;
+  }
+
+  .metric-card.good .metric-val { color: var(--green); }
+  .metric-card.bad .metric-val { color: var(--red); }
+  .metric-card.warn .metric-val { color: var(--amber); }
+
+  /* ── KV rows ── */
+  .kv-list { margin: 8px 0; }
+
+  .kv {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+  }
+
+  .kv:last-child { border-bottom: none; }
+  .kv-k { font-size: 13px; color: var(--text2); }
+  .kv-v { font-size: 13px; font-weight: 500; color: var(--text); text-align: right; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); }
+
+  /* ── Timeline ── */
+  .timeline { padding-left: 20px; position: relative; margin: 12px 0; }
+  .timeline::before { content:''; position:absolute; left:5px; top:8px; bottom:8px; width:1px; background: var(--border2); }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .tl-item::before {
+    content:'';
+    position:absolute;
+    left:-18px;
+    top:6px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+  }
+
+  .tl-item.lit::before { background: var(--accent2); border-color: var(--accent2); }
+  .tl-item strong { color: var(--text); font-weight: 500; }
+
+  /* ── Alert boxes ── */
+  .alert {
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 12px 0;
+    border-left: 3px solid;
+  }
+
+  .alert-amber { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+  .alert-red { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+  .alert-green { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .alert-blue { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+  .alert strong { font-weight: 500; }
+
+  /* ── Inputs ── */
+  .input-group { margin-bottom: 12px; }
+
+  .input-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  input[type=number], input[type=text], select, textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input:focus, select:focus, textarea:focus { border-color: var(--accent2); }
+  textarea { resize: vertical; min-height: 70px; }
+
+  select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a5960'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--text2);
+  }
+
+  .btn:hover { background: var(--bg4); color: var(--text); }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-accent {
+    background: rgba(232,213,160,0.1);
+    border-color: rgba(232,213,160,0.25);
+    color: var(--accent);
+  }
+
+  .btn-accent:hover { background: rgba(232,213,160,0.15); color: var(--accent); }
+
+  /* ── Checklist ── */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .check-item:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 17px;
+    height: 17px;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .check-box.done { background: var(--green-bg); border-color: var(--green); }
+
+  .check-text { font-size: 13px; color: var(--text2); line-height: 1.5; flex: 1; }
+  .check-text.done { text-decoration: line-through; color: var(--text3); }
+
+  /* ── Sub-tabs ── */
+  .subtabs {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .subtab {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text3);
+    cursor: pointer;
+    background: none;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+
+  .subtab:hover { border-color: var(--border2); color: var(--text2); }
+  .subtab.active { background: var(--bg4); border-color: var(--border2); color: var(--accent); }
+
+  /* ── Diag items ── */
+  .diag-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .diag-item:last-child { border-bottom: none; }
+
+  .diag-body { flex: 1; }
+  .diag-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .diag-fix { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* ── Report output ── */
+  .report-out {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--text2);
+    white-space: pre-wrap;
+    margin-top: 14px;
+    min-height: 200px;
+  }
+
+  /* ── Learning phase special ── */
+  .learning-phase-banner {
+    background: linear-gradient(135deg, rgba(176,125,232,0.08) 0%, rgba(125,181,232,0.08) 100%);
+    border: 1px solid rgba(176,125,232,0.2);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin: 16px 0;
+  }
+
+  .lp-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .lp-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--purple);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .lp-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple);
+  }
+
+  /* ── Progress bar ── */
+  .progress-wrap { margin: 12px 0; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 11px; font-family: var(--font-mono); color: var(--text3); margin-bottom: 6px; }
+  .progress-bar { height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--purple); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* ── Week tabs ── */
+  .week-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+  .week-btn {
+    font-size: 12px; font-family: var(--font-mono);
+    padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--border); color: var(--text3);
+    cursor: pointer; background: none; transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .week-btn:hover { border-color: var(--border2); color: var(--text2); }
+  .week-btn.active { background: var(--bg4); border-color: var(--border2); color: var(--accent); }
+  .week-btn.saved { border-color: rgba(126,201,154,0.3); }
+
+  /* ── Status line ── */
+  .status-line {
+    font-size: 13px;
+    color: var(--text2);
+    padding: 12px 16px;
+    background: var(--bg3);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    min-height: 44px;
+    line-height: 1.6;
+  }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* ── Mobile hamburger ── */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 200;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    width: 38px; height: 38px;
+    cursor: pointer;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 8px;
+  }
+
+  .hamburger span {
+    display: block; width: 18px; height: 1.5px;
+    background: var(--text2); border-radius: 1px;
+    transition: all 0.2s;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 90;
+  }
+
+  /* ── Copy success ── */
+  .copy-success {
+    font-size: 11px; font-family: var(--font-mono);
+    color: var(--green); margin-left: 8px;
+    opacity: 0; transition: opacity 0.2s;
+  }
+
+  .copy-success.show { opacity: 1; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .page { padding: 60px 20px 60px; }
+    .hamburger { display: flex; }
+    .overlay.show { display: block; }
+    .page-title { font-size: 26px; }
+    .card-grid { grid-template-columns: 1fr 1fr; }
+    .input-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="ham" aria-label="Open menu" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">AdOps</div>
+      <div class="logo-sub">Meta Ads Playbook</div>
+    </div>
+
+    <div class="niche-selector">
+      <div class="niche-label">Your niche</div>
+      <select class="niche-select" id="niche-select" onchange="setNiche(this.value)">
+        <option value="roofing">Roofing</option>
+        <option value="hvac">HVAC</option>
+        <option value="plumbing">Plumbing</option>
+        <option value="landscaping">Landscaping</option>
+        <option value="solar">Solar</option>
+        <option value="remodeling">Home Remodeling</option>
+        <option value="cleaning">Cleaning Services</option>
+        <option value="pest">Pest Control</option>
+        <option value="windows">Windows & Doors</option>
+        <option value="painting">Painting</option>
+        <option value="dental">Dental</option>
+        <option value="medspa">Med Spa</option>
+        <option value="legal">Legal Services</option>
+        <option value="fitness">Gym / Fitness</option>
+        <option value="auto">Auto Services</option>
+        <option value="custom">Custom...</option>
+      </select>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">Playbook</div>
+      <button class="nav-item active" onclick="showPage('setup', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+        Campaign setup
+      </button>
+      <button class="nav-item" onclick="showPage('budget', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v6M6 7h3.5a1.5 1.5 0 010 3H6"/></svg>
+        Budget
+      </button>
+      <button class="nav-item" onclick="showPage('creative', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M2 11l4-3 3 2 2-2 3 3"/></svg>
+        Ad creative
+      </button>
+      <button class="nav-item" onclick="showPage('learning', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.6 3.5L8 10l-3.1 1.5.6-3.5L3 5.5l3.5-.5z"/></svg>
+        Learning phase
+      </button>
+      <button class="nav-item" onclick="showPage('psychology', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 014 4c0 1.5-.7 2.8-1.8 3.6L10 11H6l-.2-1.4A4 4 0 018 2zM6 12h4v2H6z"/></svg>
+        Psychology
+      </button>
+
+      <div class="nav-section">Tools</div>
+      <button class="nav-item" onclick="showPage('tracker', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13l3-4 3 2 3-5 3 3"/></svg>
+        Weekly tracker
+      </button>
+      <button class="nav-item" onclick="showPage('diagnose', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 6v2.5M8 11v.5"/></svg>
+        Diagnose metrics
+      </button>
+      <button class="nav-item" onclick="showPage('checklist', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h10M3 8h7M3 12h5"/><path d="M12 10l1.5 1.5L16 9"/></svg>
+        Weekly checklist
+      </button>
+      <button class="nav-item" onclick="showPage('report', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="1.5"/><path d="M6 6h4M6 9h4M6 12h2"/></svg>
+        Client report
+      </button>
+      <button class="nav-item" onclick="showPage('reference', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M2 8h12"/></svg>
+        Quick reference
+      </button>
+      <button class="nav-item" onclick="showPage('scale', this)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l4-5 3 3 5-7"/><path d="M11 5h3v3"/></svg>
+        Scaling guide
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Built for performance-based<br>lead gen agencies
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ═══════════════════════════════ SETUP ═══════════════════════════════ -->
+    <div id="page-setup" class="page active">
+      <div class="page-header">
+        <div class="page-eyebrow">Module 01</div>
+        <h1 class="page-title">Campaign <em>setup</em></h1>
+        <p class="page-desc">The architecture of your campaign determines who sees your ad and how Meta optimizes. Get this wrong and no creative will save you.</p>
+      </div>
+
+      <h2>Campaign objective</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Objective to use</span><span class="kv-v"><span class="badge badge-green">Leads</span></span></div>
+        <div class="kv"><span class="kv-k">Why not Traffic?</span><span class="kv-v" style="max-width:340px;color:var(--text2)">Optimizes for clicks, not form fills. You pay for curiosity, not intent.</span></div>
+        <div class="kv"><span class="kv-k">Why not Conversions?</span><span class="kv-v" style="max-width:340px;color:var(--text2)">Requires 50+ conversions/week to exit learning. You don't have that yet.</span></div>
+        <div class="kv"><span class="kv-k">Lead capture type</span><span class="kv-v">Website (your landing page), NOT Meta Instant Form</span></div>
+      </div>
+
+      <div class="alert alert-amber"><strong>Use website leads, not Meta Instant Forms.</strong> Instant Forms auto-fill user data — the lead does almost no work, so intent is lower. Someone who navigates to your page and manually fills a form is 2–3× more serious.</div>
+
+      <h2>Campaign structure</h2>
+      <div class="timeline">
+        <div class="tl-item lit"><strong>1 Campaign</strong> — named for your client e.g. "Leads — [Client Name]"</div>
+        <div class="tl-item lit"><strong>2–3 Ad Sets</strong> — each tests a different audience segment</div>
+        <div class="tl-item lit"><strong>2–3 Ads per Ad Set</strong> — each tests a different creative or copy angle</div>
+      </div>
+      <p>This is a testing structure. The goal in weeks 1–2 is finding which audience + creative combination produces the lowest cost per lead. Then you scale what works.</p>
+
+      <h2>Audience targeting</h2>
+      <h3>Ad Set 1 — Broad</h3>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Location</span><span class="kv-v" id="loc-1">25–40 mile radius around client's city</span></div>
+        <div class="kv"><span class="kv-k">Age</span><span class="kv-v">30–65+</span></div>
+        <div class="kv"><span class="kv-k">Interests</span><span class="kv-v">None — let Meta find buyers</span></div>
+        <div class="kv"><span class="kv-k">Advantage+ Audience</span><span class="kv-v"><span class="badge badge-green">ON</span></span></div>
+      </div>
+
+      <h3>Ad Set 2 — Homeowners / Targeted</h3>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Behaviors</span><span class="kv-v" id="targeting-2">Homeowners (under Home Ownership)</span></div>
+        <div class="kv"><span class="kv-k">Home value</span><span class="kv-v">$150k–$500k (signals real budget)</span></div>
+        <div class="kv"><span class="kv-k">Exclude</span><span class="kv-v">Renters</span></div>
+      </div>
+
+      <h3>Ad Set 3 — Lookalike (add later)</h3>
+      <div class="card">
+        <p>Upload your leads spreadsheet as a Custom Audience, then build a 1–2% Lookalike. Only viable after 50+ leads collected. Don't build this on day one.</p>
+      </div>
+
+      <h2>Placements</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Setting</span><span class="kv-v">Advantage+ Placements — let Meta decide</span></div>
+        <div class="kv"><span class="kv-k">Why</span><span class="kv-v" style="max-width:340px;color:var(--text2)">Meta has real-time data on where your audience converts cheapest. Manual placement is guessing.</span></div>
+        <div class="kv"><span class="kv-k">Exception</span><span class="kv-v">If Audience Network drives junk leads after 2 weeks, manually exclude it</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ BUDGET ═══════════════════════════════ -->
+    <div id="page-budget" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Module 02</div>
+        <h1 class="page-title">Budget <em>logic</em></h1>
+        <p class="page-desc">Budget is not "how much can I spend" — it's "how fast do I want data." More spend equals faster learning equals faster optimization.</p>
+      </div>
+
+      <h2>Starting budget</h2>
+      <div class="card-grid">
+        <div class="metric-card">
+          <div class="metric-label">Daily per ad set</div>
+          <div class="metric-val">$15–30</div>
+          <div class="metric-sub">3 ad sets = $45–90/day total</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Monthly total</div>
+          <div class="metric-val">$600–1.2k</div>
+          <div class="metric-sub">Minimum viable test budget</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Trial / pilot run</div>
+          <div class="metric-val">$100–200</div>
+          <div class="metric-sub">Proof of concept only</div>
+        </div>
+      </div>
+
+      <div class="alert alert-amber"><strong>Important context:</strong> A $100–200 trial budget will not exit the learning phase or prove performance. It will only prove the technical system works end-to-end. Set that expectation clearly with your client before the trial starts.</div>
+
+      <h2>Campaign Budget Optimization (CBO)</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">What it does</span><span class="kv-v">Meta shifts spend to your best-performing ad set automatically</span></div>
+        <div class="kv"><span class="kv-k">Why use it</span><span class="kv-v">Meta has better real-time optimization data than you do</span></div>
+        <div class="kv"><span class="kv-k">Set minimum per ad set</span><span class="kv-v">$10/day — prevents Meta killing a set too early</span></div>
+      </div>
+
+      <h2>Target economics</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Target cost per lead</span><span class="kv-v"><span class="badge badge-green" id="cpl-target">$15–$50</span></span></div>
+        <div class="kv"><span class="kv-k" id="avg-job-label">Avg job value</span><span class="kv-v" id="avg-job-val">$8,000–$15,000</span></div>
+        <div class="kv"><span class="kv-k">Your commission (15%)</span><span class="kv-v" id="commission-range">$1,200–$2,250 per job</span></div>
+        <div class="kv"><span class="kv-k">Leads needed per job</span><span class="kv-v">~5–15 (depends on contractor close rate)</span></div>
+        <div class="kv"><span class="kv-k">Break-even ad spend per job</span><span class="kv-v" id="breakeven">$250–$750 → earns $1,200+</span></div>
+      </div>
+      <p style="margin-top:12px">The unit economics are strong. Even a mediocre campaign is profitable if the client can close. This is your pitch weapon.</p>
+    </div>
+
+    <!-- ═══════════════════════════════ CREATIVE ═══════════════════════════════ -->
+    <div id="page-creative" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Module 03</div>
+        <h1 class="page-title">Ad <em>creative</em></h1>
+        <p class="page-desc">Creative is the #1 performance variable. Perfect targeting with weak creative will fail. This is where most beginners under-invest.</p>
+      </div>
+
+      <h2>Creative hierarchy</h2>
+      <p>Test in this order. The first two are your priority.</p>
+      <div class="timeline" style="margin-top:14px">
+        <div class="tl-item lit"><strong>Before/after photos</strong> — highest converting format for home services. Real jobs, real transformations. Get these from your client before launching.</div>
+        <div class="tl-item lit"><strong>UGC-style video</strong> — contractor or customer speaking to camera. Unpolished. Authentic. Consistently outperforms produced video.</div>
+        <div class="tl-item"><strong>Problem/urgency image</strong> — damaged property, visible issue. Triggers fear and urgency. Works well for emergency or seasonal campaigns.</div>
+        <div class="tl-item"><strong>Testimonial screenshot</strong> — screenshot of a Google review on a colored background. Social proof in the feed.</div>
+        <div class="tl-item"><strong>Price-anchored offer</strong> — "Free inspection + estimate" with bold text. Works for entry-level lead capture.</div>
+      </div>
+
+      <h2>Ad formats</h2>
+      <h3>Single image</h3>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Specs</span><span class="kv-v">1080×1080 (square) or 1080×1350 (portrait)</span></div>
+        <div class="kv"><span class="kv-k">Best for</span><span class="kv-v">Before/after, testimonials, offer-focused ads</span></div>
+        <div class="kv"><span class="kv-k">Text on image</span><span class="kv-v">Keep under 20% of image area</span></div>
+      </div>
+
+      <h3>Short video</h3>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Length</span><span class="kv-v">15–30 seconds</span></div>
+        <div class="kv"><span class="kv-k">Ratio</span><span class="kv-v">9:16 vertical (Reels-style)</span></div>
+        <div class="kv"><span class="kv-k">First 3 seconds</span><span class="kv-v">Most critical — must stop the scroll</span></div>
+        <div class="kv"><span class="kv-k">Subtitles</span><span class="kv-v"><span class="badge badge-amber">Always</span> — 85% of video is watched muted</span></div>
+      </div>
+
+      <h2>Copy structure</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Line 1 — Hook</span><span class="kv-v" id="copy-hook" style="max-width:340px;color:var(--text2)">"Is your roof leaking before the next storm hits?"</span></div>
+        <div class="kv"><span class="kv-k">Line 2 — Problem</span><span class="kv-v" style="max-width:340px;color:var(--text2)">"Most homeowners wait and end up with $15k+ in interior damage."</span></div>
+        <div class="kv"><span class="kv-k">Line 3 — Solution</span><span class="kv-v" style="max-width:340px;color:var(--text2)">"[Client] offers free same-day inspections in [City]."</span></div>
+        <div class="kv"><span class="kv-k">Line 4 — CTA</span><span class="kv-v">"Click below — takes 30 seconds."</span></div>
+        <div class="kv"><span class="kv-k">Social proof</span><span class="kv-v">"500+ jobs completed. 4.9 stars on Google."</span></div>
+      </div>
+
+      <h2>When to refresh creative</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Fatigue signal</span><span class="kv-v">Frequency above 3 AND CTR declining week over week</span></div>
+        <div class="kv"><span class="kv-k">Refresh cycle</span><span class="kv-v">Every 3–4 weeks minimum</span></div>
+        <div class="kv"><span class="kv-k">What to change first</span><span class="kv-v">Hook image and first line of copy</span></div>
+        <div class="kv"><span class="kv-k">Rule</span><span class="kv-v">Never change creative AND audience AND budget at the same time</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ LEARNING PHASE ═══════════════════════════════ -->
+    <div id="page-learning" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Module 04</div>
+        <h1 class="page-title">The learning <em>phase</em></h1>
+        <p class="page-desc">The most misunderstood part of Meta Ads. Most beginners panic and kill campaigns here. Understanding this will save your campaigns.</p>
+      </div>
+
+      <div class="learning-phase-banner">
+        <div class="lp-header">
+          <div class="lp-dot"></div>
+          <div class="lp-title">Learning phase active</div>
+        </div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.7">When you see this status in Ads Manager, Meta is still figuring out who to show your ad to. Results will look bad. This is completely normal. The worst thing you can do is make changes.</p>
+      </div>
+
+      <h2>What is the learning phase?</h2>
+      <p>When you launch a new campaign, ad set, or make a significant change, Meta enters a learning phase. During this period, Meta's algorithm is actively experimenting — it's showing your ad to different types of people in different placements at different times to understand who is most likely to complete your goal (a form submission).</p>
+      <br>
+      <p>Until Meta collects enough data, its delivery is inefficient. CPMs are higher, CPLs are inflated, and performance looks inconsistent. This is not your campaign failing — it's the algorithm warming up.</p>
+
+      <h2>How it works</h2>
+      <div class="timeline" style="margin-top:14px">
+        <div class="tl-item lit"><strong>You launch the campaign</strong> — Meta begins delivery with no prior data about your specific audience and offer.</div>
+        <div class="tl-item lit"><strong>Meta experiments</strong> — It tests different audience subsets, placements, times of day, and user behaviors. Each impression and click is a data point.</div>
+        <div class="tl-item lit"><strong>Conversion signal collected</strong> — Every time someone submits your form, Meta records who they are. This is the most valuable signal.</div>
+        <div class="tl-item lit"><strong>Pattern emerges</strong> — After enough events, Meta recognizes what a likely converter looks like and begins prioritizing those people.</div>
+        <div class="tl-item lit"><strong>Learning phase exits</strong> — Ads Manager shows "Active" instead of "Learning." Delivery becomes more efficient, CPL stabilizes and usually drops.</div>
+      </div>
+
+      <h2>The 50-event threshold</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Events needed</span><span class="kv-v">~50 optimization events per ad set per week</span></div>
+        <div class="kv"><span class="kv-k">What counts as an event</span><span class="kv-v">A form submission on your landing page (with pixel installed)</span></div>
+        <div class="kv"><span class="kv-k">What doesn't count</span><span class="kv-v">Clicks, page visits, video views — only conversions count</span></div>
+        <div class="kv"><span class="kv-k">With $7/day budget</span><span class="kv-v">At $20 CPL, you get ~10 leads/month — never exits learning</span></div>
+        <div class="kv"><span class="kv-k">With $30/day budget</span><span class="kv-v">At $20 CPL, ~45 leads/month — close to exiting</span></div>
+      </div>
+
+      <div class="alert alert-amber"><strong>Low budgets trap you in learning phase.</strong> If you can't hit 50 events per week, consider using ABO (Ad Set Budget Optimization) with one consolidated ad set rather than splitting budget across three — more events in one place exits learning faster.</div>
+
+      <h2>Learning limited</h2>
+      <p>Sometimes Ads Manager shows "Learning Limited" instead of "Active." This means Meta doesn't think it has enough data to optimize confidently.</p>
+      <br>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Cause 1</span><span class="kv-v">Audience too small or too narrow</span></div>
+        <div class="kv"><span class="kv-k">Cause 2</span><span class="kv-v">Budget too low to generate enough events</span></div>
+        <div class="kv"><span class="kv-k">Cause 3</span><span class="kv-v">Too many ad sets splitting the budget</span></div>
+        <div class="kv"><span class="kv-k">Fix</span><span class="kv-v">Broaden audience, increase budget, or consolidate ad sets</span></div>
+      </div>
+
+      <h2>What resets the learning phase</h2>
+      <div class="alert alert-red"><strong>Any of these actions fully reset the learning phase — you lose all collected data and start over:</strong></div>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Budget change above 20%</span><span class="kv-v"><span class="badge badge-red">Resets</span></span></div>
+        <div class="kv"><span class="kv-k">Changing the audience targeting</span><span class="kv-v"><span class="badge badge-red">Resets</span></span></div>
+        <div class="kv"><span class="kv-k">Adding or removing an ad</span><span class="kv-v"><span class="badge badge-red">Resets</span></span></div>
+        <div class="kv"><span class="kv-k">Pausing and resuming (7+ days paused)</span><span class="kv-v"><span class="badge badge-red">Resets</span></span></div>
+        <div class="kv"><span class="kv-k">Changing the landing page URL</span><span class="kv-v"><span class="badge badge-red">Resets</span></span></div>
+        <div class="kv"><span class="kv-k">Changing the pixel event</span><span class="kv-v"><span class="badge badge-red">Resets</span></span></div>
+        <div class="kv"><span class="kv-k">Editing ad copy or creative</span><span class="kv-v"><span class="badge badge-amber">Resets that specific ad</span></span></div>
+      </div>
+
+      <h2>What does NOT reset learning</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">Budget increase under 20%</span><span class="kv-v"><span class="badge badge-green">Safe</span></span></div>
+        <div class="kv"><span class="kv-k">Changing ad name or labels</span><span class="kv-v"><span class="badge badge-green">Safe</span></span></div>
+        <div class="kv"><span class="kv-k">Adding a new ad (duplicate)</span><span class="kv-v"><span class="badge badge-amber">Resets the new ad only</span></span></div>
+        <div class="kv"><span class="kv-k">Pausing for less than 7 days</span><span class="kv-v"><span class="badge badge-green">Usually safe</span></span></div>
+      </div>
+
+      <h2>The learning phase progress tracker</h2>
+      <p style="margin-bottom:14px">Use this to track where you are. Enter your leads so far this week.</p>
+      <div class="input-grid" style="max-width:400px">
+        <div class="input-group">
+          <label class="input-label">Leads this week</label>
+          <input type="number" id="lp-leads" placeholder="0" oninput="updateLPProgress()" min="0">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Days running</label>
+          <input type="number" id="lp-days" placeholder="1" oninput="updateLPProgress()" min="1" max="7">
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Progress to exit learning</span><span id="lp-pct">0 / 50 events</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="lp-bar" style="width:0%"></div></div>
+      </div>
+      <div id="lp-status" class="status-line" style="margin-top:10px">Enter your leads above to track learning phase progress.</div>
+
+      <h2>Rules during learning phase</h2>
+      <div class="alert alert-blue"><strong>The golden rule: do nothing.</strong> If Meta shows "Learning," your only job is to let it run. No budget tweaks, no audience changes, no creative swaps. Wait a minimum of 7–10 days before judging performance.</div>
+      <div class="card kv-list" style="margin-top:12px">
+        <div class="kv"><span class="kv-k">Minimum wait before evaluating</span><span class="kv-v">7–10 days</span></div>
+        <div class="kv"><span class="kv-k">Can I pause if results look terrible?</span><span class="kv-v">Only if you're losing money on ad spend. Otherwise wait.</span></div>
+        <div class="kv"><span class="kv-k">Should I tell my client?</span><span class="kv-v">Yes — set this expectation before launch, not after</span></div>
+        <div class="kv"><span class="kv-k">What to actually watch</span><span class="kv-v">Pixel firing correctly, SMS delivering, leads in sheet</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ PSYCHOLOGY ═══════════════════════════════ -->
+    <div id="page-psychology" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Module 05</div>
+        <h1 class="page-title">Marketing <em>psychology</em></h1>
+        <p class="page-desc">Understanding why people click and fill out forms lets you engineer those decisions deliberately. These are the levers behind every effective ad.</p>
+      </div>
+
+      <h2>The purchase type</h2>
+      <p id="purchase-type-text">Roofing is a <strong>fear-based purchase</strong>, not a desire-based one. Nobody wakes up excited to replace their roof. They do it because they're worried — about storm damage, leaks, home value, insurance deadlines. Your ads must speak to the fear first, then offer relief.</p>
+
+      <h2>The 6 triggers you control</h2>
+
+      <h3>1. Loss aversion</h3>
+      <div class="card">
+        <p>People fear losing $10,000 more than they want to gain $10,000. Frame delay as the cost. "A small repair today prevents a $12k interior water damage claim tomorrow." The risk of inaction must feel real and expensive.</p>
+      </div>
+
+      <h3>2. Urgency and scarcity</h3>
+      <div class="card">
+        <p>"Only 3 free inspection slots left this week." Creates FOMO. Must feel real or it backfires. Seasonal urgency ("before storm season") is more credible than arbitrary slot counts. Tie urgency to real external events when possible.</p>
+      </div>
+
+      <h3>3. Social proof</h3>
+      <div class="card">
+        <p>Star ratings, review counts, job photos. Reduces perceived risk. The prospect thinks: "If 400 others trusted them, I can too." Show it prominently in both the ad and landing page. Numbers are more believable than adjectives.</p>
+      </div>
+
+      <h3>4. Authority and specificity</h3>
+      <div class="card">
+        <p>"Licensed, insured, 12-year certified contractor." Specifics signal legitimacy. Vague claims like "best in the area" are ignored. Specific claims are believed — use certification names, years in business, exact review counts.</p>
+      </div>
+
+      <h3>5. Friction reduction</h3>
+      <div class="card">
+        <p>Every form field is a reason to quit. You're asking for name, phone, email, job type, budget, and urgency — that's a lot. Your landing page copy must justify each field with a value exchange: "so we can match you with the right specialist." The CTA must reduce perceived effort: "Get my free inspection" beats "Submit."</p>
+      </div>
+
+      <h3>6. Pattern interrupt</h3>
+      <div class="card">
+        <p>Your ad has 1.5 seconds to stop a scroll. The hook — first line of copy or first video frame — must be unexpected, direct, or visually jarring. "Is your roof lying to you?" stops faster than "Get a free quote today." Familiarity is invisible. Surprise is sticky.</p>
+      </div>
+
+      <h2>Message match</h2>
+      <p>If your ad says one thing and your landing page says another, you've broken message match. The user feels deceived and bounces. This is responsible for 40–60% conversion rate drops.</p>
+      <div class="card kv-list" style="margin-top:12px">
+        <div class="kv"><span class="kv-k">Ad headline</span><span class="kv-v">"Free Same-Day Roof Inspection in [City]"</span></div>
+        <div class="kv"><span class="kv-k">Landing page H1</span><span class="kv-v">"Get Your Free Same-Day Roof Inspection"</span></div>
+        <div class="kv"><span class="kv-k">CTA button</span><span class="kv-v">"Claim My Free Inspection"</span></div>
+      </div>
+      <p style="margin-top:10px">Same language, same offer, continuous commitment. Every step must feel like the natural next move of the one before it.</p>
+
+      <h2>The funnel psychology</h2>
+      <div class="timeline" style="margin-top:12px">
+        <div class="tl-item lit"><strong>Ad impression</strong> — They're not looking for you. You interrupt. Fear or curiosity must hook them in 1.5 seconds or they scroll on.</div>
+        <div class="tl-item lit"><strong>Click to landing page</strong> — The ad promised something. The page must immediately deliver on that exact promise. Any disconnect and they bounce.</div>
+        <div class="tl-item lit"><strong>Reading the page</strong> — They're interested but skeptical. Proof, credentials, and simplicity keep them engaged. Complexity kills momentum.</div>
+        <div class="tl-item lit"><strong>Starting the form</strong> — A micro-commitment. Once started, most people finish. Make the first field easy (name) before asking for phone or budget.</div>
+        <div class="tl-item lit"><strong>Submitting</strong> — They self-qualified. They're a warm lead. Now the contractor must call within 5 minutes — speed at this stage is more important than almost anything else.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ TRACKER ═══════════════════════════════ -->
+    <div id="page-tracker" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Tool 01</div>
+        <h1 class="page-title">Weekly <em>tracker</em></h1>
+        <p class="page-desc">Enter your numbers from Ads Manager each week. Auto-calculates all key metrics and flags anything that needs attention.</p>
+      </div>
+
+      <div class="week-tabs" id="week-tabs">
+        <button class="week-btn active" onclick="switchWeek(1,this)">Week 1</button>
+        <button class="week-btn" onclick="switchWeek(2,this)">Week 2</button>
+        <button class="week-btn" onclick="switchWeek(3,this)">Week 3</button>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-group"><label class="input-label">Total spend ($)</label><input type="number" id="t-spend" placeholder="0" oninput="calcTracker()"></div>
+        <div class="input-group"><label class="input-label">Impressions</label><input type="number" id="t-impr" placeholder="0" oninput="calcTracker()"></div>
+        <div class="input-group"><label class="input-label">Clicks</label><input type="number" id="t-clicks" placeholder="0" oninput="calcTracker()"></div>
+        <div class="input-group"><label class="input-label">Leads (form fills)</label><input type="number" id="t-leads" placeholder="0" oninput="calcTracker()"></div>
+        <div class="input-group"><label class="input-label">Jobs booked</label><input type="number" id="t-jobs" placeholder="0" oninput="calcTracker()"></div>
+        <div class="input-group"><label class="input-label">Avg job value ($)</label><input type="number" id="t-jobval" placeholder="8000" oninput="calcTracker()"></div>
+      </div>
+
+      <div class="card-grid" id="tracker-results">
+        <div class="metric-card" id="mc-cpm"><div class="metric-label">CPM</div><div class="metric-val">—</div><div class="metric-sub">Cost per 1k impressions</div></div>
+        <div class="metric-card" id="mc-ctr"><div class="metric-label">CTR</div><div class="metric-val">—</div><div class="metric-sub">Target: above 1.5%</div></div>
+        <div class="metric-card" id="mc-cpc"><div class="metric-label">CPC</div><div class="metric-val">—</div><div class="metric-sub">Target: $1–$3</div></div>
+        <div class="metric-card" id="mc-cvr"><div class="metric-label">Conv. rate</div><div class="metric-val">—</div><div class="metric-sub">Target: above 3%</div></div>
+        <div class="metric-card" id="mc-cpl"><div class="metric-label">CPL</div><div class="metric-val">—</div><div class="metric-sub">Target: under $50</div></div>
+        <div class="metric-card" id="mc-comm"><div class="metric-label">Your commission</div><div class="metric-val">—</div><div class="metric-sub">15% of booked jobs</div></div>
+      </div>
+
+      <hr>
+      <div class="status-line" id="tracker-status">Enter your numbers above to see how your campaign is performing.</div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-accent" onclick="saveWeek()">Save this week</button>
+        <button class="btn" onclick="clearWeek()">Clear</button>
+      </div>
+
+      <div id="history-wrap" style="display:none;margin-top:24px">
+        <h3>Saved weeks</h3>
+        <div class="card kv-list" id="history-list"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ DIAGNOSE ═══════════════════════════════ -->
+    <div id="page-diagnose" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Tool 02</div>
+        <h1 class="page-title">Diagnose <em>metrics</em></h1>
+        <p class="page-desc">When a number looks off, find the symptom here. Each one tells you exactly what to fix and the logic behind why.</p>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-red">Low CTR</span></div>
+        <div class="diag-body">
+          <div class="diag-title">CTR below 1% — your ad isn't stopping the scroll</div>
+          <div class="diag-fix"><strong>Fix:</strong> Your hook isn't compelling. Change the image or the first line of copy. Try fear-based hooks. Don't touch the audience yet — test new creative first. Low CTR is always a creative problem, not an audience problem (unless your audience is wildly wrong).</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-red">High CPL</span></div>
+        <div class="diag-body">
+          <div class="diag-title">CPL above $60 — something in the funnel is leaking</div>
+          <div class="diag-fix"><strong>If CTR is fine but CPL is high:</strong> your landing page is the problem. Check message match, form length, and mobile load speed. <br><strong>If CTR is also low:</strong> fix the creative first, then reassess CPL — the two problems are connected.</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-amber">Low conv. rate</span></div>
+        <div class="diag-body">
+          <div class="diag-title">Conversion rate below 2% — clicks aren't turning into leads</div>
+          <div class="diag-fix"><strong>Fix:</strong> Landing page problem. Check: (1) does the page headline match the ad exactly? (2) Is the form too long or confusing? (3) Does the page load under 3 seconds on mobile? (4) Is your CTA button specific — "Get my free inspection" not "Submit"?</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-amber">High CPC</span></div>
+        <div class="diag-body">
+          <div class="diag-title">CPC above $4 — you're paying too much per click</div>
+          <div class="diag-fix"><strong>Fix:</strong> Audience is too competitive or too narrow. Try broadening — remove interest filters and let Advantage+ run. Also check if your creative relevance is low, which inflates CPM and therefore CPC.</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-amber">High frequency</span></div>
+        <div class="diag-body">
+          <div class="diag-title">Frequency above 3 — same people seeing the ad too often</div>
+          <div class="diag-fix"><strong>Fix:</strong> Expand your audience radius, or introduce a new creative. Don't kill the ad set — just refresh what you're showing. Above frequency 5, performance will actively decline and brand perception suffers.</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-red">Junk leads</span></div>
+        <div class="diag-body">
+          <div class="diag-title">Leads are filling the form but are unqualified or fake</div>
+          <div class="diag-fix"><strong>Fix:</strong> Add a qualifying question (budget range, property ownership). Check if Audience Network placement is on — exclude it, as it attracts low-quality traffic and click farms. Also verify the homeowner behavior filter is active in targeting.</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-green">Good CPL, no jobs</span></div>
+        <div class="diag-body">
+          <div class="diag-title">Great leads but the client isn't booking jobs</div>
+          <div class="diag-fix"><strong>This is not your ad problem.</strong> This is a sales problem on the client's end. The most common cause: slow follow-up. A lead called within 5 minutes closes at 8–10× the rate of one called after 3 hours. Have this conversation directly and clearly with your client.</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-purple">Learning phase</span></div>
+        <div class="diag-body">
+          <div class="diag-title">Ads Manager shows "Learning" status and results look bad</div>
+          <div class="diag-fix"><strong>Do nothing.</strong> This is expected. Meta needs ~50 conversion events per ad set to optimize. Results look inflated during learning. Wait 7–10 days. See the Learning Phase module for a full breakdown.</div>
+        </div>
+      </div>
+
+      <div class="diag-item">
+        <div style="padding-top:2px"><span class="badge badge-amber">Spend not delivering</span></div>
+        <div class="diag-body">
+          <div class="diag-title">Budget isn't being spent — delivery is low</div>
+          <div class="diag-fix"><strong>Fix:</strong> Audience is too narrow for your budget level. Broaden the radius, remove restrictive filters, or check for policy flags on your ad (Meta may have restricted delivery). Also confirm the ad is approved and not stuck in review.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ CHECKLIST ═══════════════════════════════ -->
+    <div id="page-checklist" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Tool 03</div>
+        <h1 class="page-title">Weekly <em>checklist</em></h1>
+        <p class="page-desc">Consistency is what separates good campaigns from lucky ones. Run these checks on schedule — no exceptions.</p>
+      </div>
+
+      <div class="subtabs">
+        <button class="subtab active" onclick="switchChecklist('daily', this)">Daily · 5 min</button>
+        <button class="subtab" onclick="switchChecklist('weekly', this)">Weekly · 30 min</button>
+        <button class="subtab" onclick="switchChecklist('creative', this)">Creative review</button>
+        <button class="subtab" onclick="switchChecklist('client', this)">Client meeting</button>
+        <button class="subtab" onclick="switchChecklist('launch', this)">Pre-launch</button>
+      </div>
+
+      <div id="checklist-body"></div>
+      <button class="btn" style="margin-top:14px" onclick="resetChecklist()">Reset all</button>
+    </div>
+
+    <!-- ═══════════════════════════════ REPORT ═══════════════════════════════ -->
+    <div id="page-report" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Tool 04</div>
+        <h1 class="page-title">Client <em>report</em></h1>
+        <p class="page-desc">Fill in the fields and copy the report. Send it every week — consistency builds trust more than results do in the early stages.</p>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-group"><label class="input-label">Client name</label><input type="text" id="r-name" placeholder="John Smith" oninput="buildReport()"></div>
+        <div class="input-group"><label class="input-label">Your name</label><input type="text" id="r-yours" placeholder="Moksh" oninput="buildReport()"></div>
+        <div class="input-group"><label class="input-label">Week number</label><input type="number" id="r-week" placeholder="1" oninput="buildReport()"></div>
+        <div class="input-group"><label class="input-label">Date range</label><input type="text" id="r-dates" placeholder="May 5 – May 11" oninput="buildReport()"></div>
+        <div class="input-group"><label class="input-label">Leads this week</label><input type="number" id="r-leads" placeholder="0" oninput="buildReport()"></div>
+        <div class="input-group"><label class="input-label">Ad spend this week ($)</label><input type="number" id="r-spend" placeholder="0" oninput="buildReport()"></div>
+      </div>
+      <div class="input-group"><label class="input-label">What you tested / changed this week</label><textarea id="r-tested" placeholder="e.g. Tested a before/after photo vs. urgency image. Before/after got 2× the clicks." oninput="buildReport()"></textarea></div>
+      <div class="input-group"><label class="input-label">Plan for next week</label><textarea id="r-next" placeholder="e.g. Scaling the before/after ad and testing a new hook around seasonal urgency." oninput="buildReport()"></textarea></div>
+      <div class="input-group"><label class="input-label">Notes for client (optional)</label><textarea id="r-notes" placeholder="e.g. As a reminder — leads called within 5 minutes close at much higher rates. The faster your team follows up, the better the numbers we'll both see." oninput="buildReport()"></textarea></div>
+
+      <div class="report-out" id="report-output">Fill in the fields above to generate your client report.</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+        <button class="btn btn-accent" onclick="copyReport()">Copy report</button>
+        <span class="copy-success" id="copy-success">Copied to clipboard</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ REFERENCE ═══════════════════════════════ -->
+    <div id="page-reference" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Tool 05</div>
+        <h1 class="page-title">Quick <em>reference</em></h1>
+        <p class="page-desc">Every number and rule you need at a glance. Bookmark this tab.</p>
+      </div>
+
+      <h2>Key terms explained</h2>
+      <div class="card-grid">
+        <div class="metric-card"><div class="metric-label">CPL</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">Cost per lead. Total spend ÷ leads. Your north star metric. Target: <strong style="color:var(--green)">under $50</strong></div></div>
+        <div class="metric-card"><div class="metric-label">ROAS</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">Return on ad spend. Revenue ÷ ad spend. For performance deals, track commission earned vs spend.</div></div>
+        <div class="metric-card"><div class="metric-label">CTR</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">Click-through rate. Clicks ÷ impressions. Target: <strong style="color:var(--green)">above 1.5%</strong>. Low CTR = creative problem.</div></div>
+        <div class="metric-card"><div class="metric-label">CPC</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">Cost per click. Spend ÷ clicks. Target: <strong style="color:var(--green)">$1–$3</strong>. High CPC = narrow or competitive audience.</div></div>
+        <div class="metric-card"><div class="metric-label">CPM</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">Cost per 1,000 impressions. Typical home services: $10–$25. You don't control this directly.</div></div>
+        <div class="metric-card"><div class="metric-label">Frequency</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">Avg times same person sees ad. Target: <strong style="color:var(--amber)">under 3</strong>. Above 5 actively hurts performance.</div></div>
+        <div class="metric-card"><div class="metric-label">Conv. rate</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">Leads ÷ clicks. Target: <strong style="color:var(--green)">above 3%</strong>. Low rate = landing page problem, not ad problem.</div></div>
+        <div class="metric-card"><div class="metric-label">CBO / ABO</div><div style="font-size:13px;color:var(--text2);margin-top:4px;line-height:1.5">CBO = Meta distributes budget. ABO = you set each ad set. Start with CBO.</div></div>
+      </div>
+
+      <h2>Target metrics</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">CTR</span><span class="kv-v"><span class="badge badge-green">Above 1.5%</span></span></div>
+        <div class="kv"><span class="kv-k">CPC</span><span class="kv-v"><span class="badge badge-green">$1–$3</span></span></div>
+        <div class="kv"><span class="kv-k">Landing page conv. rate</span><span class="kv-v"><span class="badge badge-green">Above 3%</span></span></div>
+        <div class="kv"><span class="kv-k">CPL</span><span class="kv-v"><span class="badge badge-green">Under $50</span></span></div>
+        <div class="kv"><span class="kv-k">Frequency</span><span class="kv-v"><span class="badge badge-amber">Under 3</span></span></div>
+      </div>
+
+      <h2>Rules you must not break</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">During learning phase</span><span class="kv-v">Change nothing</span></div>
+        <div class="kv"><span class="kv-k">Budget increases</span><span class="kv-v">Max 20% every 3–4 days</span></div>
+        <div class="kv"><span class="kv-k">Min days before judging</span><span class="kv-v">7 days</span></div>
+        <div class="kv"><span class="kv-k">Creative refresh trigger</span><span class="kv-v">Frequency above 3 + falling CTR</span></div>
+        <div class="kv"><span class="kv-k">Variable changes</span><span class="kv-v">One at a time, always</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ SCALE ═══════════════════════════════ -->
+    <div id="page-scale" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">Module 06</div>
+        <h1 class="page-title">Scaling <em>guide</em></h1>
+        <p class="page-desc">Scaling is not just spending more money. Spending more on a broken system loses money faster. Scale only when you have proof.</p>
+      </div>
+
+      <h2>The 3 conditions before you scale</h2>
+      <div class="alert alert-green">
+        <strong>Only scale when all three are true:</strong><br>
+        1. CPL is consistent under $50 for 2+ weeks in a row<br>
+        2. Your client has confirmed jobs are being booked from your leads<br>
+        3. The learning phase has exited — Ads Manager shows "Active"
+      </div>
+
+      <h2>How to scale</h2>
+      <div class="timeline" style="margin-top:14px">
+        <div class="tl-item lit"><strong>Step 1 — Vertical scaling</strong> — Increase budget by max 20% every 3–4 days. Going from $50 to $200/day overnight resets the learning phase. Boring, incremental increases are the correct method.</div>
+        <div class="tl-item lit"><strong>Step 2 — Horizontal scaling</strong> — Duplicate your best-performing ad set and increase the budget on the copy. The original keeps running. This avoids resetting learning on a proven campaign.</div>
+        <div class="tl-item"><strong>Step 3 — Lookalike audiences</strong> — Once you have 50+ leads in your sheet, upload them as a Custom Audience and build 1%, 2%, and 3% Lookalikes. These are your highest-intent cold audiences.</div>
+        <div class="tl-item"><strong>Step 4 — Retargeting</strong> — Create an ad set targeting page visitors who didn't submit. Budget $5–$10/day. Use a different angle: "Still need that free inspection?" Expect CPL 50–70% cheaper than cold traffic.</div>
+        <div class="tl-item"><strong>Step 5 — Add a second client</strong> — Once this system is producing consistent results, replicate the setup for a second client. The second campaign takes 20% of the setup time of the first.</div>
+      </div>
+
+      <h2>Signs you should NOT scale yet</h2>
+      <div class="card kv-list">
+        <div class="kv"><span class="kv-k">CPL above $60</span><span class="kv-v"><span class="badge badge-red">Fix first</span></span></div>
+        <div class="kv"><span class="kv-k">Still in learning phase</span><span class="kv-v"><span class="badge badge-red">Wait</span></span></div>
+        <div class="kv"><span class="kv-k">Client not following up leads</span><span class="kv-v"><span class="badge badge-red">Address first</span></span></div>
+        <div class="kv"><span class="kv-k">Conversion rate below 2%</span><span class="kv-v"><span class="badge badge-red">Fix landing page</span></span></div>
+        <div class="kv"><span class="kv-k">Frequency above 5</span><span class="kv-v"><span class="badge badge-amber">Refresh creative first</span></span></div>
+      </div>
+
+      <h2>Long-term client growth</h2>
+      <div class="timeline" style="margin-top:14px">
+        <div class="tl-item lit"><strong>Client 1</strong> — prove the system. Get 1 job booked. Now you have a case study.</div>
+        <div class="tl-item"><strong>Clients 2–3</strong> — sell with results. "I got [Name] 18 leads in 30 days, 4 jobs booked." That closes cold calls fast.</div>
+        <div class="tl-item"><strong>Clients 4–5</strong> — systemize. Use the same campaign template. Your time per client drops significantly.</div>
+        <div class="tl-item"><strong>Beyond</strong> — recurring monthly revenue from a portfolio of clients, each on performance-only deals.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── Niche data ──
+const NICHES = {
+  roofing: { label:'Roofing', jobMin:8000, jobMax:15000, cplTarget:'$15–$50', locRadius:'25–40 mile radius', targeting:'Homeowners, home value $150k–$500k, exclude renters', copyHook:'"Is your roof ready for the next storm season?"' },
+  hvac: { label:'HVAC', jobMin:3000, jobMax:8000, cplTarget:'$10–$40', locRadius:'20–35 mile radius', targeting:'Homeowners, age 28–65, home ownership behavior', copyHook:'"Is your AC going to make it through summer?"' },
+  plumbing: { label:'Plumbing', jobMin:500, jobMax:5000, cplTarget:'$8–$30', locRadius:'15–30 mile radius', targeting:'Homeowners, age 25–65, emergency intent audiences', copyHook:'"Slow drain? That\'s your pipes telling you something."' },
+  landscaping: { label:'Landscaping', jobMin:1500, jobMax:6000, cplTarget:'$10–$35', locRadius:'20–35 mile radius', targeting:'Homeowners with income $75k+, home value $200k+', copyHook:'"Your neighbors just got their yard done. Yours ready?"' },
+  solar: { label:'Solar', jobMin:15000, jobMax:40000, cplTarget:'$40–$100', locRadius:'30–60 mile radius', targeting:'Homeowners, income $80k+, interest in sustainability or energy', copyHook:'"Most homeowners don\'t know what solar actually costs in 2025."' },
+  remodeling: { label:'Home Remodeling', jobMin:10000, jobMax:60000, cplTarget:'$30–$80', locRadius:'25–50 mile radius', targeting:'Homeowners, age 30–65, home value $200k+', copyHook:'"What would it take to finally love your kitchen?"' },
+  cleaning: { label:'Cleaning Services', jobMin:150, jobMax:600, cplTarget:'$5–$20', locRadius:'10–25 mile radius', targeting:'Homeowners or renters, dual-income households, age 28–55', copyHook:'"You work hard. Your home should reflect that."' },
+  pest: { label:'Pest Control', jobMin:200, jobMax:1500, cplTarget:'$5–$25', locRadius:'15–30 mile radius', targeting:'Homeowners, age 28–65, household income $50k+', copyHook:'"One pest sighting is never just one pest."' },
+  windows: { label:'Windows & Doors', jobMin:3000, jobMax:15000, cplTarget:'$20–$60', locRadius:'25–45 mile radius', targeting:'Homeowners, age 35–65, home value $150k+', copyHook:'"Old windows are costing you money every single month."' },
+  painting: { label:'Painting', jobMin:1000, jobMax:6000, cplTarget:'$10–$35', locRadius:'20–35 mile radius', targeting:'Homeowners, age 30–65, home value $150k+', copyHook:'"The fastest way to transform a home costs less than you think."' },
+  dental: { label:'Dental', jobMin:500, jobMax:5000, cplTarget:'$15–$60', locRadius:'10–20 mile radius', targeting:'Age 25–60, families with children, dental insurance interest', copyHook:'"When was the last time you actually liked your smile?"' },
+  medspa: { label:'Med Spa', jobMin:300, jobMax:3000, cplTarget:'$15–$50', locRadius:'10–25 mile radius', targeting:'Women 28–55, household income $70k+, beauty & wellness interests', copyHook:'"Real results. No filters required."' },
+  legal: { label:'Legal Services', jobMin:1500, jobMax:15000, cplTarget:'$30–$120', locRadius:'30–60 mile radius', targeting:'Age 25–65, recent life events (divorce, accident, business), income $50k+', copyHook:'"You have rights. Do you know what they\'re worth?"' },
+  fitness: { label:'Gym / Fitness', jobMin:50, jobMax:200, cplTarget:'$3–$15', locRadius:'5–15 mile radius', targeting:'Age 18–50, health & wellness interest, gym behavior', copyHook:'"You said you\'d start in January. It\'s not too late."' },
+  auto: { label:'Auto Services', jobMin:200, jobMax:3000, cplTarget:'$5–$25', locRadius:'10–25 mile radius', targeting:'Car owners, age 22–60, vehicle ownership behaviors', copyHook:'"Your car is telling you something. Are you listening?"' },
+  custom: { label:'Custom', jobMin:1000, jobMax:10000, cplTarget:'$10–$60', locRadius:'25 mile radius', targeting:'Homeowners / relevant audience for your niche', copyHook:'"[Your niche-specific hook here]"' }
+};
+
+let currentNiche = 'roofing';
+
+function setNiche(val) {
+  currentNiche = val;
+  const n = NICHES[val];
+  if(!n) return;
+  const commMin = (n.jobMin * 0.15).toLocaleString();
+  const commMax = (n.jobMax * 0.15).toLocaleString();
+  const el = id => document.getElementById(id);
+  if(el('avg-job-val')) el('avg-job-val').textContent = '$' + n.jobMin.toLocaleString() + '–$' + n.jobMax.toLocaleString();
+  if(el('commission-range')) el('commission-range').textContent = '$' + commMin + '–$' + commMax + ' per job';
+  if(el('cpl-target')) el('cpl-target').textContent = n.cplTarget;
+  if(el('copy-hook')) el('copy-hook').textContent = n.copyHook;
+  if(el('targeting-2')) el('targeting-2').textContent = n.targeting;
+  if(el('loc-1')) el('loc-1').textContent = n.locRadius + ' around client';
+  if(el('t-jobval')) el('t-jobval').placeholder = Math.round((n.jobMin+n.jobMax)/2);
+}
+
+// ── Navigation ──
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if(pg) pg.classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(window.innerWidth <= 768) toggleSidebar(true);
+  window.scrollTo(0, 0);
+}
+
+function toggleSidebar(forceClose) {
+  const s = document.getElementById('sidebar');
+  const o = document.getElementById('overlay');
+  if(forceClose || s.classList.contains('open')) {
+    s.classList.remove('open');
+    o.classList.remove('show');
+  } else {
+    s.classList.add('open');
+    o.classList.add('show');
+  }
+}
+
+// ── Learning phase tracker ──
+function updateLPProgress() {
+  const leads = parseInt(document.getElementById('lp-leads').value) || 0;
+  const days = parseInt(document.getElementById('lp-days').value) || 1;
+  const pct = Math.min(100, Math.round((leads / 50) * 100));
+  document.getElementById('lp-bar').style.width = pct + '%';
+  document.getElementById('lp-pct').textContent = leads + ' / 50 events';
+  let msg = '';
+  const projected = Math.round((leads / days) * 7);
+  if(leads === 0) { msg = 'Enter your leads above to track learning phase progress.'; }
+  else if(leads >= 50) { msg = '✓ You have enough events to exit the learning phase. Ads Manager should show Active status.'; }
+  else if(projected >= 50) { msg = 'On track — projected ' + projected + ' leads this week. You should exit learning phase.'; }
+  else { msg = 'Projected ' + projected + ' leads this week at current pace. You need 50 to exit learning. Consider consolidating to fewer ad sets or increasing budget.'; }
+  document.getElementById('lp-status').textContent = msg;
+}
+
+// ── Weekly tracker ──
+let weekData = {};
+let currentWeek = 1;
+
+function switchWeek(w, btn) {
+  currentWeek = w;
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = weekData[w] || {};
+  ['spend','impr','clicks','leads','jobs','jobval'].forEach(k => {
+    const el = document.getElementById('t-' + k);
+    if(el) el.value = d[k] || '';
+  });
+  calcTracker();
+}
+
+function calcTracker() {
+  const v = k => parseFloat(document.getElementById('t-' + k).value) || 0;
+  const spend = v('spend'), impr = v('impr'), clicks = v('clicks');
+  const leads = v('leads'), jobs = v('jobs');
+  const jobval = parseFloat(document.getElementById('t-jobval').value) || (NICHES[currentNiche] ? Math.round((NICHES[currentNiche].jobMin + NICHES[currentNiche].jobMax)/2) : 8000);
+
+  const cpm = impr > 0 ? (spend/impr*1000).toFixed(2) : null;
+  const ctr = impr > 0 ? (clicks/impr*100).toFixed(2) : null;
+  const cpc = clicks > 0 ? (spend/clicks).toFixed(2) : null;
+  const cvr = clicks > 0 ? (leads/clicks*100).toFixed(2) : null;
+  const cpl = leads > 0 ? (spend/leads).toFixed(2) : null;
+  const comm = jobs > 0 ? (jobs * jobval * 0.15) : null;
+
+  function setCard(id, val, label, good, bad) {
+    const card = document.getElementById('mc-' + id);
+    if(!card) return;
+    const valEl = card.querySelector('.metric-val');
+    valEl.textContent = val !== null ? label + val : '—';
+    card.classList.remove('good','bad','warn');
+    if(val !== null) {
+      if(good && parseFloat(val) >= parseFloat(good)) card.classList.add('good');
+      else if(bad && parseFloat(val) >= parseFloat(bad)) card.classList.add('bad');
+    }
+  }
+
+  setCard('cpm', cpm, '$', null, 30);
+  setCard('ctr', ctr, '', 1.5, null);
+  setCard('cpc', cpc, '$', null, 4);
+  setCard('cvr', cvr, '', 3, null);
+  setCard('cpl', cpl, '$', null, 50);
+
+  const commCard = document.getElementById('mc-comm');
+  const commVal = commCard.querySelector('.metric-val');
+  if(comm !== null) { commVal.textContent = '$' + comm.toLocaleString(); commCard.classList.add('good'); }
+  else { commVal.textContent = '—'; commCard.classList.remove('good','bad','warn'); }
+
+  let msgs = [];
+  if(!spend) { document.getElementById('tracker-status').textContent = 'Enter your numbers above to see how your campaign is performing.'; return; }
+  if(ctr !== null) { if(parseFloat(ctr) < 1) msgs.push('CTR below 1% — creative hook needs work.'); else if(parseFloat(ctr) >= 1.5) msgs.push('CTR is healthy.'); else msgs.push('CTR is okay — aim for 1.5%+.'); }
+  if(cpl !== null) { if(parseFloat(cpl) < 30) msgs.push('CPL is excellent.'); else if(parseFloat(cpl) < 50) msgs.push('CPL is within range.'); else msgs.push('CPL is high — check the Diagnose tab.'); }
+  if(cvr !== null && parseFloat(cvr) < 2) msgs.push('Conv. rate is low — review your landing page.');
+  document.getElementById('tracker-status').textContent = msgs.join(' ');
+}
+
+function saveWeek() {
+  const d = {};
+  ['spend','impr','clicks','leads','jobs','jobval'].forEach(k => {
+    const el = document.getElementById('t-' + k);
+    if(el) d[k] = el.value;
+  });
+  weekData[currentWeek] = d;
+  document.querySelectorAll('.week-btn')[currentWeek-1].classList.add('saved');
+  renderHistory();
+}
+
+function clearWeek() {
+  ['spend','impr','clicks','leads','jobs','jobval'].forEach(k => {
+    const el = document.getElementById('t-' + k);
+    if(el) el.value = '';
+  });
+  calcTracker();
+}
+
+function renderHistory() {
+  const keys = Object.keys(weekData);
+  const wrap = document.getElementById('history-wrap');
+  if(!keys.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  document.getElementById('history-list').innerHTML = keys.map(w => {
+    const d = weekData[w];
+    const leads = parseInt(d.leads) || 0;
+    const spend = parseFloat(d.spend) || 0;
+    const cpl = leads > 0 ? '$' + (spend/leads).toFixed(2) : '—';
+    return `<div class="kv"><span class="kv-k">Week ${w}</span><span class="kv-v">${leads} leads · ${cpl} CPL · $${spend} spend</span></div>`;
+  }).join('');
+}
+
+// ── Checklists ──
+const LISTS = {
+  daily: [
+    'Check Google Sheet — new leads logged correctly?',
+    'Confirm SMS fired for each lead received',
+    'Open Ads Manager — any delivery errors or warnings?',
+    'Confirm daily spend is tracking to budget',
+    'Notify client of any new leads from today'
+  ],
+  weekly: [
+    'Pull CPL by ad set — which audience is cheapest?',
+    'Pull CPL by ad creative — which is converting best?',
+    'Check frequency — is it above 3 on any ad?',
+    'Check CTR trend — declining week over week?',
+    'Call or message client — any leads converting to jobs?',
+    'Check landing page on mobile — loading correctly?',
+    'Decide: pause underperformer or run another week?',
+    'Write and send weekly client report',
+    'Note what you are testing next week and why'
+  ],
+  creative: [
+    'Has it been 3–4 weeks since last creative refresh?',
+    'Is frequency above 3 AND CTR declining together?',
+    'Do you have new before/after photos from the client?',
+    'Write a new hook (first line of ad copy)',
+    'Create new image or video asset',
+    'Duplicate winning ad set and add new creative',
+    'Keep the original running — do not kill what is working',
+    'Set a reminder to evaluate the new creative after 7 days'
+  ],
+  client: [
+    'Pull weekly stats from Ads Manager before the call',
+    'Have Google Sheet open to show leads in real time',
+    'Prepare: what worked this week and why',
+    'Prepare: what did not work and what you are changing',
+    'Ask: how many leads did you call? Any booked?',
+    'Ask: how fast is your team calling leads back?',
+    'Set honest expectations for the next period',
+    'Ask: do you have photos or videos we can use for creative?'
+  ],
+  launch: [
+    'Meta Pixel installed on landing page and verified firing',
+    'Pixel fires Lead event on thank-you page (page 2)',
+    'Test form submission — SMS received on your phone?',
+    'Test form submission — Google Sheet populated correctly?',
+    'Landing page headline matches ad copy exactly (message match)',
+    'Page loads under 3 seconds on mobile',
+    'All form fields working and required fields set',
+    'CTA button text is specific ("Claim my free inspection")',
+    'Campaign objective set to Leads (not Traffic or Conversions)',
+    'Advantage+ Audience enabled on broad ad set',
+    'Client briefed on learning phase — expectations set'
+  ]
+};
+
+let checkStates = { daily:{}, weekly:{}, creative:{}, client:{}, launch:{} };
+let currentList = 'daily';
+
+function switchChecklist(key, btn) {
+  currentList = key;
+  document.querySelectorAll('.subtab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderChecklist();
+}
+
+function renderChecklist() {
+  const items = LISTS[currentList];
+  const states = checkStates[currentList];
+  document.getElementById('checklist-body').innerHTML = items.map((item, i) => {
+    const done = !!states[i];
+    return `<div class="check-item" onclick="toggleCheck(${i})">
+      <div class="check-box${done?' done':''}">
+        ${done ? '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+      </div>
+      <div class="check-text${done?' done':''}">${item}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCheck(i) {
+  checkStates[currentList][i] = !checkStates[currentList][i];
+  renderChecklist();
+}
+
+function resetChecklist() {
+  checkStates[currentList] = {};
+  renderChecklist();
+}
+
+renderChecklist();
+
+// ── Client report ──
+function buildReport() {
+  const g = id => (document.getElementById(id) || {}).value || '';
+  const name = g('r-name') || '[Client]';
+  const yours = g('r-yours') || '[Your name]';
+  const week = g('r-week') || '?';
+  const dates = g('r-dates') || '[dates]';
+  const leads = g('r-leads') || '0';
+  const spend = g('r-spend') || '0';
+  const tested = g('r-tested') || '[what you tested]';
+  const next = g('r-next') || '[plan for next week]';
+  const notes = g('r-notes');
+  const cpl = parseFloat(leads) > 0 && parseFloat(spend) > 0 ? '$' + (parseFloat(spend)/parseFloat(leads)).toFixed(2) : '—';
+
+  let out = `Hi ${name},
+
+Here's your Week ${week} update (${dates}).
+
+━━ RESULTS ━━━━━━━━━━━━━━━━━━━
+Leads delivered this week: ${leads}
+Ad spend: $${spend}
+Cost per lead: ${cpl}
+
+━━ WHAT WE TESTED ━━━━━━━━━━━━
+${tested}
+
+━━ NEXT WEEK ━━━━━━━━━━━━━━━━━
+${next}`;
+
+  if(notes.trim()) out += `\n\n━━ NOTES ━━━━━━━━━━━━━━━━━━━━━\n${notes}`;
+
+  out += `\n\nAll leads are in your tracking sheet with full contact info. Let me know how follow-up calls are going — lead response speed has a major impact on close rates.\n\n– ${yours}`;
+
+  document.getElementById('report-output').textContent = out;
+}
+
+function copyReport() {
+  const text = document.getElementById('report-output').textContent;
+  if(text.startsWith('Fill')) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const s = document.getElementById('copy-success');
+    s.classList.add('show');
+    setTimeout(() => s.classList.remove('show'), 2500);
+  });
+}
+
+// ── Init ──
+setNiche('roofing');
+buildReport();
+</script>
+</body>
+</html>
